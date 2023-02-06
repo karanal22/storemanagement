@@ -1,0 +1,20 @@
+.swagger-ui .opblock.error-code {
+    border-color: #c83232;
+    background: #ffebeb;
+}
+.opblock-error-code {
+    color: #c83232;
+    font-weight: bolder;
+    padding: 4px;
+}
+#error-code-link {
+    text-decoration: none;
+}
+#collapseOne {
+    border: 1px solid #c83232;
+}
+.swagger-ui table tbody tr td:first-of-type,
+.swagger-ui table tbody tr td {
+    padding: 0.75rem;
+}
+

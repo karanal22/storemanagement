@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StoreManagement.Api</name>
+    </assembly>
+    <members>
+        <member name="M:StoreManagement.Api.Controllers.StoreProductController.List(StoreManagement.Services.Model.Request.StoreProdect.GetStoreProductList)">
+            <summary>
+            Get all storeProducts
+            </summary>
+            <returns>Returns all storeProducts</returns>
+        </member>
+        <member name="M:StoreManagement.Api.Controllers.StoreProductController.Get(System.Int32)">
+            <summary>
+            Get StoreProduct by Id
+            </summary>
+            <param name="id">StoreProduct Id</param>
+            <returns>Returns StoreProduct detail by id</returns>
+        </member>
+        <member name="M:StoreManagement.Api.Controllers.StoreProductController.Update(StoreManagement.Services.Model.Request.StoreProdect.UpdateStoreProduct)">
+            <summary>
+            Update existing storeProduct
+            </summary>
+            <param name="request">storeProduct info</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

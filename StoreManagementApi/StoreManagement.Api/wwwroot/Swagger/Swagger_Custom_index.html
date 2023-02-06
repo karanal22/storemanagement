@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>StoreManagement API Guide</title>
+	<link rel="stylesheet" type="text/css" href="/docs/swagger-ui.css">
+	<link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+	<style>
+
+		html {
+			box-sizing: border-box;
+			overflow: -moz-scrollbars-vertical;
+			overflow-y: scroll;
+		}
+
+		*,
+		*:before,
+		*:after {
+			box-sizing: inherit;
+		}
+
+		body {
+			margin: 0;
+			background: #fafafa;
+		}
+	</style>
+	%(HeadContent)
+</head>
+
+<body>
+	<div id="swagger-ui"></div>
+	<hr />
+	<div class="swagger-ui">
+		<div class="wrapper">
+			<section class="block col-12 block-desktop col-12-desktop">
+				<div>
+					<span>
+						<div class="opblock-tag-section">
+							<div id="error-code-block" style="height: auto; border: none; margin: 0px; padding: 0px;">
+								<!-- react-text: 261 --> <!-- /react-text -->
+								<span id="accordion">
+									<a data-toggle="collapse" href="#collapseOne" id="error-code-link">
+										<div class="opblock error-code">
+											<div class="opblock-summary opblock-summary-get">
+												<span class="opblock-error-code">Error Codes</span>
+												<span class="opblock-summary-path"></span>
+												<div class="opblock-summary-description"></div>
+											</div>
+										</div>
+									</a>
+									<div id="collapseOne" class="collapse opblock-body" data-parent="#accordion">
+										<div class="card">
+											<div class="card-body" id="error-card">
+												<table class="table">
+													<tr>
+														<th style="width: 20%">Code</th>
+														<th style="width: 40%">Title</th>
+														<th style="width: 40%">Message</th>
+													</tr>
+												</table>
+											</div>
+										</div>
+
+									</div>
+								</span>
+							</div>
+						</div>
+					</span>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<br />
+	<br />
+
+	<!-- Workaround for https://github.com/swagger-api/swagger-editor/issues/1371 -->
+	<script>
+		if (window.navigator.userAgent.indexOf("Edge") > -1) {
+			console.log("Removing native Edge fetch in favor of swagger-ui's polyfill")
+			window.fetch = undefined;
+		}
+	</script>
+
+	<script src="/js/jquery.min.js"></script>
+	<script src="/docs/swagger-ui-bundle.js"></script>
+	<script src="/docs/swagger-ui-standalone-preset.js"></script>
+	<script>
+		window.onload = function () {
+			var configObject = JSON.parse('%(ConfigObject)');
+			var oauthConfigObject = JSON.parse('%(OAuthConfigObject)');
+
+			// Workaround for https://github.com/swagger-api/swagger-ui/issues/5945
+			configObject.urls.forEach(function (item) {
+				if (item.url.startsWith("http") || item.url.startsWith("/")) return;
+				item.url = window.location.href.replace("index.html", item.url).split('#')[0];
+			});
+
+			// If validatorUrl is not explicitly provided, disable the feature by setting to null
+			if (!configObject.hasOwnProperty("validatorUrl"))
+				configObject.validatorUrl = null
+
+			// If oauth2RedirectUrl isn't specified, use the built-in default
+			if (!configObject.hasOwnProperty("oauth2RedirectUrl"))
+				configObject.oauth2RedirectUrl = window.location.href.replace("index.html", "oauth2-redirect.html").split('#')[0];
+
+			// Apply mandatory parameters
+			configObject.dom_id = "#swagger-ui";
+			configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+			configObject.layout = "StandaloneLayout";
+
+			// Begin Swagger UI call region
+
+			const ui = SwaggerUIBundle(configObject);
+
+			ui.initOAuth(oauthConfigObject);
+
+			// End Swagger UI call region
+
+			window.ui = ui
+		}
+	</script>
+
+	<script>
+
+		function bindError(errorGroup) {
+			var table = '<h5 class="text-secondary">' + errorGroup.httpStatus + ' - ' + errorGroup.httpStatusCode + '</h5>' +
+				'<table class="table table-striped" id="error-table-body-' + errorGroup.httpStatus + '">' +
+				'</table>';
+			$('#error-card').append(table);
+
+			errorGroup.errors.forEach(function (error) {
+				var errorRow = '<tr>' +
+					'<td style="width: 20%">' + error.code + '</td>' +
+					'<td style="width: 40%">' + error.title + '</td>' +
+					'<td style="width: 40%">' + error.message + '</td>' +
+					'</tr>';
+
+				$("#error-table-body-" + errorGroup.httpStatus).append(errorRow);
+			});
+
+		}
+
+		$(document).ready(function () {
+			$.ajax(
+				{
+					url: "/api/v1/error",
+					success: function (result) {
+						$("#error-table-body").empty();
+
+						result.forEach(function (errorGroup) {
+							bindError(errorGroup);
+						});
+					}
+				});
+		});
+	</script>
+</body>
+</html>
